@@ -6,11 +6,8 @@ public final class RemoteFeedLoader {
     case connectivity
     case invalidData
   }
-  
-  public enum Result: Equatable {
-    case success([FeedItem])
-    case failure(Error)
-  }
+  public typealias Result = LoadFeedResult<Error>
+
   private let url: URL
   private let client: HTTPClient
   
