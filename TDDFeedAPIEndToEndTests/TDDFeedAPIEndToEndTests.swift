@@ -21,10 +21,12 @@ class TDDFeedAPIEndToEndTests: XCTestCase {
   
   // MARK: Helpers
   
-  private func getFeedResult() -> LoadFeedResult? {
+  private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
     let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
     let client = URLSessionHTTPClient()
     let loader = RemoteFeedLoader(url: url, client: client)
+    trackMemoryLeaks(client, file: file, line: line)
+    trackMemoryLeaks(loader, file: file, line: line)
     
     var receivedResult: LoadFeedResult?
     let exp = expectation(description: "Wait for loading feed")
