@@ -4,20 +4,7 @@ import TDDFeed
 class TDDFeedAPIEndToEndTests: XCTestCase {
   
   func test_endToEndServerGETFeedResult_matchesFixedTestAccountData() {
-    let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-    let client = URLSessionHTTPClient()
-    let loader = RemoteFeedLoader(url: url, client: client)
-    
-    var receivedResult: LoadFeedResult?
-    let exp = expectation(description: "Wait for loading feed")
-    loader.load { (result) in
-      receivedResult = result
-      exp.fulfill()
-    }
-    
-    wait(for: [exp], timeout: 10.0)
-    
-    switch receivedResult {
+    switch getFeedResult() {
     case let .success(feedItems)?:
       XCTAssertEqual(feedItems.count, 8)
       
@@ -33,6 +20,23 @@ class TDDFeedAPIEndToEndTests: XCTestCase {
   }
   
   // MARK: Helpers
+  
+  private func getFeedResult() -> LoadFeedResult? {
+    let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+    let client = URLSessionHTTPClient()
+    let loader = RemoteFeedLoader(url: url, client: client)
+    
+    var receivedResult: LoadFeedResult?
+    let exp = expectation(description: "Wait for loading feed")
+    loader.load { (result) in
+      receivedResult = result
+      exp.fulfill()
+    }
+    
+    wait(for: [exp], timeout: 10.0)
+    
+    return receivedResult
+  }
   
   private func expectedItem(at index: Int) -> FeedItem{
     return FeedItem(id: id(at: index),
